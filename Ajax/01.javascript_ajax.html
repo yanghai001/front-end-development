@@ -31,7 +31,7 @@
             }
 
             //2.open方法传递地址和请求方法
-            xhr.open("get", "http://127.0.0.1:8888")
+            xhr.open("get", "http://127.0.0.1:8888/articles")
 
             //3.设置请求响应处理函数
             xhr.onreadystatechange = function () { //可以先调用send，再用onload代替onreadystatechange
@@ -69,18 +69,18 @@
             }
 
             //2.open方法传递地址和请求方法
-            xhr.open("post", "http://127.0.0.1:8081/articles")
+            xhr.open("post", "http://127.0.0.1:8888/articles")
 
             // 3.配置请求参数
-            var postStr = '?art_id=8163'
+            var postStr = 'art_id=8163'
 
             // 4.发起请求
             xhr.send(postStr)
 
             // 5.使用onload方法设置响应函数，可以跟onreadystatechange调换.onload方法不要判断状态码
             xhr.onload = function () {
-                res = xhr.responseText //将响应报文本体给到变量res label.innerHTML=res //将响应结果显示到label标签上 } } else {
-                label.innerHTML = xhr.status + ',' + xhr.statusText //访问异常显示异常信息
+                res = xhr.responseText //将响应报文本体给到变量res label.innerHTML=res 
+                label.innerHTML = res //将响应结果显示到label标签上
             }
         }
     </script>
