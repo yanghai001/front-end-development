@@ -1,3 +1,6 @@
+const {
+    count
+} = require('console');
 var http = require('http');
 var articles = [{
     "art_id": "8163",
@@ -832,8 +835,14 @@ http.createServer(function (request, response) {
                 data += chunk
             })
             request.on('end', function () {
-                console.log(data);
-                response.end(data)
+
+                var obj = articles.filter(item => item.art_id == data)
+                console.log(obj);
+
+
+
+                response.end(JSON.stringify(obj))
+
             })
 
         }
