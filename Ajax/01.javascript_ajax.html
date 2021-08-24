@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript_ajax</title>
+</head>
+
+<body>
+    <button>点击发送get请求</button>
+    <button>点击发送post请求</button>
+    <hr>
+    <label for="">1</label>
+
+
+    <script>
+        // 获取事件触发元素及响应元素
+        var getBtn = document.querySelectorAll('button')[0] //获取get按钮
+        var postBtn = document.querySelectorAll('button')[1] //获取post按钮
+        var label = document.querySelector('label') //获取label，用于显示结果
+
+        //调用get方法
+        getBtn.addEventListener('click', function () {
+            //1.ajax创建对象
+            if (window.XMLHttpRequest) { //先判断支不支持XMLHttpRequest对象（低版本的IE5,6不支持）
+                var xhr = new XMLHttpRequest() //如果支持，new一个实例对象
+            } else {
+                var xhr = ActiveXObject('Miscrosoft.XMLHTTP') //否则用ActiveXObject创建对象
+            }
+
+            //2.open方法传递地址和请求方法
+            xhr.open("get", "http://127.0.0.1:8888")
+
+            //3.设置请求响应处理函数
+            xhr.onreadystatechange = function () { //可以先调用send，再用onload代替onreadystatechange
+                /*
+                readyState代表了判断请求的状态，readystatechange是监控状态的变化：
+                    readyState=0：对象被创建，但尚未调用 open() 方法
+                    readyState=1：open() 方法已经被调用。
+                    readyState=2：send() 方法已经被调用，并且头部和状态已经可获得
+                    readyState=3：下载中， responseText 属性已经包含部分数据
+                    readyState=4：下载操作已完成
+                */
+                if (xhr.readyState == 4) { //如果响应已下载完成
+                    if (xhr.status >= 200 && xhr.status < 300) { //响应状态为200~300之间都为成功，否则类似404,403等都是异常
+                        var res = xhr.responseText //将响应报文本体给到变量res
+                        label.innerHTML = res //将响应结果显示到label标签上
+                    }
+                } else {
+                    label.innerHTML = xhr.status + ',' + xhr.statusText //访问异常显示异常信息
+                }
+            }
+
+            // 4.向服务器发起异步请求
+            xhr.send()
+        })
+
+
+
+        // 调用post方法
+        postBtn.onclick = function () {
+            //1.ajax创建对象
+            if (window.XMLHttpRequest) { //先判断支不支持XMLHttpRequest对象（低版本的IE5,6不支持）
+                var xhr = new XMLHttpRequest() //如果支持，new一个实例对象
+            } else {
+                var xhr = ActiveXObject('Miscrosoft.XMLHTTP') //否则用ActiveXObject创建对象
+            }
+
+            //2.open方法传递地址和请求方法
+            xhr.open("post", "http://127.0.0.1:8081/articles")
+
+            // 3.配置请求参数
+            var postStr = '?art_id=8163'
+
+            // 4.发起请求
+            xhr.send(postStr)
+
+            // 5.使用onload方法设置响应函数，可以跟onreadystatechange调换.onload方法不要判断状态码
+            xhr.onload = function () {
+                res = xhr.responseText //将响应报文本体给到变量res label.innerHTML=res //将响应结果显示到label标签上 } } else {
+                label.innerHTML = xhr.status + ',' + xhr.statusText //访问异常显示异常信息
+            }
+        }
+    </script>
+</body>
+
+</html>
