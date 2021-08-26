@@ -1,4 +1,5 @@
 {
+  "type": "module",
   "name": "ajax",
   "version": "1.0.0",
   "description": "ajax test",
@@ -15,5 +16,8 @@
   "bugs": {
     "url": "https://github.com/yanghai001/front-end-development/issues"
   },
-  "homepage": "https://github.com/yanghai001/front-end-development#readme"
+  "homepage": "https://github.com/yanghai001/front-end-development#readme",
+  "dependencies": {
+    "then-fs": "^2.0.0"
+  }
 }
