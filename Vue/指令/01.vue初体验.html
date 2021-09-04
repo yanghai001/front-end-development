@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Vue初体验</title>
+    <!-- 1.通过cdn引入vue.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+</head>
+
+<body>
+    <!-- 2.在DOM中建立操作区域，id为app -->
+    <div id="app">
+        {{ message }}
+    </div>
+
+    <!-- 3.创建vue实例对象,注意Vue()首字母大写 -->
+    <script>
+        const vm = new Vue({
+            // 通过id选择器指定操作区域
+            el: '#app',
+            // 定义变量数据
+            data: {
+                message: 'hello vue!'
+            }
+        })
+    </script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue 内容渲染指令 </title>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <!-- v-bind绑定属性 -->
+        <img v-bind:src="src" alt="">
+
+        <!-- v-bind可以简写成冒号: -->
+        <img :src="src" alt="">
+
+    </div>
+
+
+    <!-- 实例化vue对象 -->
+    <script>
+        const vm = new Vue({
+            // 通过id选择器指定操作区域
+            el: '#app',
+            // 定义变量数据
+            data: {
+                src: 'https://tse4-mm.cn.bing.net/th/id/OIP-C.Y9RERhC3R8idJWx-icPT5gHaFl?w=203&h=180&c=7&r=0&o=5&dpr=1.25&pid=1.7'
+            }
+        })
+    </script>
+</body>
+
+</html>

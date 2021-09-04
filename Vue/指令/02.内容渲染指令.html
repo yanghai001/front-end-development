@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue 内容渲染指令 </title>
+    <!-- 引入vue.js -->
+    <script src="https://cdn.bootcdn.net/ajax/libs/vue/2.6.14/vue.js"></script>
+
+</head>
+
+<body>
+    <div id="app">
+        <!-- {{插值表达式}} -->
+        <p>姓名：{{ username }}</p>
+        <!-- v-text -->
+        <p v-text='age'>年龄：</p>
+        <!-- v-html -->
+        <p v-html="url"></p>
+
+    </div>
+
+
+    <!-- 实例化vue对象 -->
+    <script>
+        const vm = new Vue({
+            // 通过id选择器指定操作区域
+            el: '#app',
+            // 定义变量数据
+            data: {
+                username: 'zhang san',
+                age: 22,
+                url: '<a href="https://cn.bing.com/search?q=zhang+san">百度一下</a>'
+            }
+        })
+    </script>
+</body>
+
+</html>
