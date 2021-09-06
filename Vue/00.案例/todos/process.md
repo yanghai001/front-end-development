@@ -5,25 +5,25 @@
 
 1、创建项目：在合适的文件夹中启动命令行，执行以下指令
 
-```cmd
+```
     npm init vite-app todos
 ```
 
 2、进入todos
 
-```cmd
+```
     cd todos
 ```
 
 3、安装依赖
 
-```cmd
+```
     npm install
 ```
 
 4、安装其他依赖包：这里我们需要使用less语法，但只需要在开发环境下,加上参数-D
 
-```cmd
+```
     npm install less -D
 ```
 
@@ -34,6 +34,7 @@
 1、重置index.css中的全局样式
 
 ```
+    
     :root {
     font-size: 12px;
     }
