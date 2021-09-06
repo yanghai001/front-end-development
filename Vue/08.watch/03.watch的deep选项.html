@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue3 watch</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+    <!-- 使用axios之前需要先引入 -->
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <!-- 操作区域 -->
+    <div id="app">
+        请输入用户名：
+        <input type="text" v-model.trim="info.username">
+        <input type="text" v-model.trim="info.age">
+    </div>
+
+    <!-- vue -->
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                info: {
+                    username: "zhang san",
+                    age: 20,
+                }
+            },
+            watch: {
+
+                // 监视info的值，每次发生变化就发起ajax请求，检查info的username是否可用
+                // info的任意一个属性发生变化都会触发这个侦听器
+                info: {
+                    // async 和await是promise的修饰符，目的是使axios返回promise对象变为直接返回具体值
+                    async handler(newVal, oldVal) {
+                        const {
+                            data: res
+                        } = await axios.get('https://www.escook.cn/api/finduser/' + newVal.username)
+                        console.log('info');
+                        console.log(res);
+
+                    },
+
+                    //让对象的任意一个属性变化都触发侦听器
+                    deep: true
+                },
+
+                // 如果只想侦听对象的其中一个属性，只需要将对应的属性当做侦听器名称即可，注意用单引号包裹
+                'info.age': {
+                    // async 和await是promise的修饰符，目的是使axios返回promise对象变为直接返回具体值
+                    async handler(newVal, oldVal) {
+                        const {
+                            data: res
+                        } = await axios.get('https://www.escook.cn/api/finduser/' + newVal.username)
+                        console.log('info.age');
+                        console.log(res);
+                    },
+                }
+
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
