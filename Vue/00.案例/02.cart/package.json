@@ -1,5 +1,5 @@
 {
-  "name": "cart",
+  "name": "02.cart",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",

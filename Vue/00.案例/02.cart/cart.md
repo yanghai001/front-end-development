@@ -24,9 +24,63 @@ npm i less -D
 ```
 ### 二、封装es-header组件
 #### 2.1创建和注册es-header组件
-#### 2.2基于bootstrap渲染组件内容
-#### 2.1创建和注册es-header组件
-#### 2.1创建和注册es-header组件
+1.在src/components目录下创建EsHeader.vue组件，并完成以下结构：
+```
+    <template>
+    <div>EsHeader组件</div>
+    </template>
+
+    <script>
+    export default {
+    name: "EsHeader",
+    };
+    </script>
+
+    <style lang="less" scoped>
+    </style>
+```
+2.在app.vue组件中完成以下结构，导入并注册EsHeader.vue组件：
+```
+    <template>
+    <div>Cart</div>
+    </template>
+
+    <script>
+    // 导入EsHeader组件
+    import EsHeader from "./components/es-header/EsHeader.vue";
+
+    export default {
+    name: "Cart",
+
+    components: {
+        // 注册EsHeader组件
+        EsHeader,
+    },
+
+    directives: {},
+
+    data() {
+        return {};
+    },
+
+    mounted() {},
+
+    methods: {},
+    };
+    </script>
+
+    <style lang="less" scoped>
+    </style>
+```
+3.在app.vue的template模板结构中使用EsHeader组件：
+```
+    <template>
+    <div>Cart</div>
+    <es-header></es-header>
+    </template>
+```
+#### 2.2封装es-header组件
+
 
 ### 三、基于axios请求商品列表数据
 ### 四、封装es-footer组件
