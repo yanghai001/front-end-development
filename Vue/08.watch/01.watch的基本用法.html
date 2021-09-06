@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>vue3 watch</title>
+    <!-- 开发环境版本，包含了有帮助的命令行警告 -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+</head>
+
+<body>
+    <!-- 操作区域 -->
+    <div id="app">
+        请输入用户名：
+        <input type="text" v-model.trim="username">
+    </div>
+
+    <!-- vue -->
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                username: 'zhang san'
+            },
+            watch: {
+                //监听一个字符串、数字等数据的变化，变量名就是侦听器的名称，如下的username
+                username(newval, oldval) {
+                    // 将新值和旧值都输出出来
+                    console.log(newval, oldval);
+                }
+
+
+            }
+
+        })
+    </script>
+
+</body>
+
+</html>
