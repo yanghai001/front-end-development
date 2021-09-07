@@ -80,7 +80,64 @@ npm i less -D
     </template>
 ```
 #### 2.2封装es-header组件
+1、封装需求：
+    - 允许用户自定义 **title** 标题内容
+    - 允许用户自定义 **color** 文字颜色
+    - 允许用户自定义 **bgcolor** 背景颜色
+    - 允许用户自定义 **fsize** 字体大小
+    - es-header组件必须**固定定位**到页面**顶部**的位置，**高度**为45px,**文本居中**，z-index为999
 
+2、在es-header组件下封装以下props属性：
+```
+    <script>
+        export default {
+        name: "EsHeader",
+        props: {
+            title: {
+            //标题内容
+            type: String,
+            default: "es-header组件",
+            },
+            // 文字颜色
+            color: { 
+            type: String,
+            default: "#ffffff",
+            },
+            // 背景颜色
+            bgcolor: {
+            type: String,
+            default: "#007BFF",
+            },
+            // 文字大小
+            fsize: {
+            type: Number,
+            default: 16,
+            },
+        },
+        };
+    </script>
+```
+3、在EsHeader.vue的template模板结构中修改成以下形式,将props属性应用到div标签上：
+```
+    <template>
+    <!-- v-bind指令绑定属性，注意具体样式需要用{}包含，不同项用逗号隔开 -->
+    <div
+        :style="{ color: color, backgroundColor: bgcolor, fontSize: fsize + 'px' }"
+    >
+        {{ title }}
+    </div>
+    </template>
+```
+4、在EsHeader.vue的template模板结构中给div增加类名header-container，并在style中设置类样式：
+```
+
+```
+5、在app.vue的template模板结构中修改EsHeader组件的使用：
+```
+    <template>
+      <es-header title="购物车" color="white" bgcolor="blue"  :fsize="18" ></es-header>
+    </template>
+```
 
 ### 三、基于axios请求商品列表数据
 ### 四、封装es-footer组件

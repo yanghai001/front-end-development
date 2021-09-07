@@ -1,10 +1,15 @@
 <template>
-  <div>Cart</div>
+  <div class="main-container">Cart</div>
   <hr />
-  <es-header></es-header>
+  <es-header
+    title="购物车"
+    color="white"
+    bgcolor="blue"
+    :fsize="18"
+  ></es-header>
 </template>
 
-    <script>
+<script>
 // 导入EsHeader组件
 import EsHeader from "./components/es-header/EsHeader.vue";
 
@@ -28,5 +33,8 @@ export default {
 };
 </script>
 
-    <style lang="less" scoped>
+<style lang="less" scoped>
+.main-container {
+  margin-top: 45px;
+}
 </style>

@@ -12,5 +12,8 @@
     "@vue/compiler-sfc": "^3.0.4",
     "less": "^4.1.1",
     "vite": "^1.0.0-rc.13"
+  },
+  "eslintConfig": {
+    "parser": "@babel/eslint-parser"
   }
 }
