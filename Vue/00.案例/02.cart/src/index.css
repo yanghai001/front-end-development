@@ -1,3 +1,7 @@
 :root {
   font-size: 16px;
 }
+
+.form-check .form-check-input[type="checkbox"] {
+  border-radius: 50%;
+}
