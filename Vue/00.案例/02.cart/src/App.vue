@@ -1,13 +1,22 @@
 <template>
-  <div class="main-container">Cart</div>
-  <hr />
-  <es-header
-    title="购物车"
-    color="white"
-    bgcolor="blue"
-    :fsize="18"
-  ></es-header>
-  <es-footer></es-footer>
+  <div class="main-container">
+    <!-- 调用EsHeader.vue组件 -->
+    <es-header
+      title="购物车"
+      color="white"
+      bgcolor="blue"
+      :fsize="18"
+    ></es-header>
+    <!-- 调用EsFooter.vue组件 -->
+    <es-goods v-for="item in goodslist" :key="item.id"></es-goods>
+    <!-- 调用EsFooter.vue组件 -->
+    <es-footer
+      :isfull="true"
+      :total="11"
+      :amount="11.32123"
+      @fullChange="onFullStateChange"
+    ></es-footer>
+  </div>
 </template>
 
 <script>
@@ -15,7 +24,8 @@
 import EsHeader from "./components/es-header/EsHeader.vue";
 // 导入EsFooter组件
 import EsFooter from "./components/es-footer/EsFooter.vue";
-
+// 导入EsGoods组件
+import EsGoods from "./components/es-goods/EsGoods.vue";
 
 export default {
   name: "Cart",
@@ -25,6 +35,8 @@ export default {
     EsHeader,
     // 注册EsFooter组件
     EsFooter,
+    // 注册EsGoods组件
+    EsGoods,
   },
 
   directives: {},
@@ -53,6 +65,11 @@ export default {
       console.log(res);
       this.goodslist = res.list;
     },
+    // 监听全选按钮选中状态的变化
+    onFullStateChange(isFull) {
+      // 打印全选按钮选中状态
+      console.log(isFull);
+    },
   },
 };
 </script>
@@ -60,5 +77,6 @@ export default {
 <style lang="less" scoped>
 .main-container {
   margin-top: 45px;
+  margin-bottom: 50px;
 }
 </style>
