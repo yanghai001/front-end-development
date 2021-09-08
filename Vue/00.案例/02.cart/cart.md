@@ -653,10 +653,204 @@ npm i less -D
     //省略其他样式
 ```
 ##### 5.2.3 封装自定义属性
+1、在EsGoods.vue组件中的props节点中声明以下属性：
+```
+    props:{
+        // id,thumb,title,price,count,checked
+        // 商品id
+        id:{
+        type:[String,Number],
+        required:true
+        },
+        // 商品图片
+        thumb:{
+        type:String,
+        required:true
+        },
+        // 商品名称
+        title:{
+        type:String,
+        required:true
+        },
+        // 商品价格
+        price:{
+        type:Number,
+        required:true
+        },
+        // 商品数量
+        count:{
+        type:Number,
+        required:true
+        },
+        // 商品选中状态
+        checked:{
+        type:Boolean,
+        required:true
+        }
+    }
+```
+2、在EsGoods.vue组件中修改DOM结构如下，应用自定义的属性：
+```
+    <template>
+    <div class="goods-container">
+        <!-- 左侧图片区域 -->
+        <div class="left">
+        <!-- 复选框 -->
+        <div class="form-check" >
+            <input class="form-check-input" type="checkbox" :id="id" :checked="checked" />
+            <label class="form-check-label" :for="id">
+            <img :src="thumb" class="thumb" />
+            </label>
+        </div>
+        </div>
+        <!-- 右侧信息区域 -->
+        <div class="right">
+        <!-- 商品名称 -->
+        <div class="top">{{title}}</div>
+        <div class="bottom">
+            <!-- 商品价格 -->
+            <div class="price">￥{{price.toFixed(2)}}</div>
+            <!-- 商品数量 -->
+            <div class="count">数量:{{count}}</div>
+        </div>
+        </div>
+    </div>
+    </template>
+```
+3、在app.vue中的DOM结构中修改es-goods组件的使用：
+```
+    <!-- 调用EsGoods.vue组件 -->
+    <es-goods
+      v-for="item in goodslist"
+      :key="item.id"
+      :id="item.id"
+      :title="item.goods_name"
+      :thumb="item.goods_img"
+      :price="item.goods_price"
+      :count="item.goods_count"
+      :checked="item.goods_state"
+    ></es-goods>
+```
 
-
-##### 5.2.4 封装自定义事件stateChange
-
+##### 5.2.4 封装自定义事件stateChange,实现修改单个商品的勾选状态
+1、在EsGoods.vue组件中声明自定义事件如下：
+```
+    // 复选框状态变化自定义事件
+    emits:['stateChange'],
+```
+2、在EsGoods.vue组件的DOM结构中为复选框change事件绑定处理函数onCheckBoxChange：
+```
+    <!-- 复选框 -->
+    <div class="form-check" >
+    <input class="form-check-input" type="checkbox" :id="id" :checked="checked" @change="onCheckBoxChange" />
+    <label class="form-check-label" :for="id">
+        <img :src="thumb" class="thumb" />
+    </label>
+    </div>
+```
+3、在EsGoods.vue组件的methods节点中声明onCheckBoxChange函数：
+```
+    // 复选框选中状态变化处理函数，通过事件对象e获取最新选中状态
+    methods: {
+        onCheckBoxChange(e) {
+        // 触发自定义事件,向外传递id和复选框的最新选中状态
+        this.$emit("stateChange", {
+            id: this.id,
+            value: e.target.checked,
+        });
+        },
+    },
+```
+4、在app.vue中的DOM结构中修改es-goods组件的使用，绑定stateChange自定义事件的处理函数onGoodStateChange：
+```
+    <!-- 调用EsGoods.vue组件 -->
+    <es-goods
+      v-for="item in goodslist"
+      :key="item.id"
+      :id="item.id"
+      :title="item.goods_name"
+      :thumb="item.goods_img"
+      :price="item.goods_price"
+      :count="item.goods_count"
+      :checked="item.goods_state"
+      @stateChange="onGoodStateChange"
+    ></es-goods>
+```
+5、在app.vue的methods节点中声明onGoodStateChange函数，更新goodslist数组中对应id商品的选中状态：
+```
+    // 单个商品选中状态变化触发的函数
+    onGoodStateChange(e) {
+      // 在数组中找到指定id的数组元素
+      const result = this.goodslist.find((item) => item.id === e.id);
+      // 判断是否找到
+      if (result) {
+        // 找到了则更新对应商品的选中状态
+        result.goods_state = e.value;
+      }
+    },
+```
 
 ### 六、实现合计、结算数量、全选功能
+#### 6.1实现价格合计、结算数量合计功能
+1、在app.vue组件中的computed节点中创建以下计算属性：
+```
+computed: {
+    // 计算属性，返回选中商品的总价格
+    amount() {
+      // 总价格变量
+      let a = 0;
+      this.goodslist
+        .filter((item) => item.goods_state === true)
+        .forEach((item) => {
+          // 循环累加被选中的商品价格
+          a += item.goods_price * item.goods_count;
+        });
+      return a;
+    },
+    // 计算属性，返回被选中商品的总数量
+    total() {
+      // 声明总数量的变量
+      let t = 0;
+      this.goodslist
+        .filter((item) => item.goods_state === true)
+        .forEach((item) => {
+          // 循环累加被选中的商品数量
+          t += item.goods_count;
+        });
+      return t;
+    },
+  },
+```
+2、在app.vue组件中的DOM结构中修改es-footer的调用，绑定定义的两个计算属性：
+```
+    <!-- 调用EsFooter.vue组件 -->
+    <es-footer
+      :isfull="true"
+      :total="total"
+      :amount="amount"
+      @fullChange="onFullStateChange"
+    ></es-footer>
+```
+#### 6.2实现全选和取消全选功能
+我们在app.vue组件中调用es-footer组件时，已经绑定了监听全选复选框选中状态的函数onFullStateChange：
+```
+    <!-- 调用EsFooter.vue组件 -->
+    <es-footer
+      :isfull="true"
+      :total="total"
+      :amount="amount"
+      @fullChange="onFullStateChange"
+    ></es-footer>
+```
+接下来只需要修改onFullStateChange函数的处理逻辑即可：
+```
+    // 监听全选按钮选中状态的变化
+    onFullStateChange(isFull) {
+      // 循环将每个商品的复选框选中状态改成跟全选复选框的选中状态一样
+      this.goodslist.forEach(item =>{
+        item.goods_state = isFull
+      })
+    },
+```
+
 ### 七、封装es-counter组件

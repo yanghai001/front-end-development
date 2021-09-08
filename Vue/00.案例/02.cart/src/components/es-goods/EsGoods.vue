@@ -4,21 +4,27 @@
     <div class="left">
       <!-- 复选框 -->
       <div class="form-check">
-        <input class="form-check-input" type="checkbox" id="fullCheck" />
-        <label class="form-check-label" for="fullCheck">
-          <img src="商品图片" class="thumb" />
+        <input
+          class="form-check-input"
+          type="checkbox"
+          :id="id"
+          :checked="checked"
+          @change="onCheckBoxChange"
+        />
+        <label class="form-check-label" :for="id">
+          <img :src="thumb" class="thumb" />
         </label>
       </div>
     </div>
     <!-- 右侧信息区域 -->
     <div class="right">
       <!-- 商品名称 -->
-      <div class="top">xxx</div>
+      <div class="top">{{ title }}</div>
       <div class="bottom">
         <!-- 商品价格 -->
-        <div class="price">￥0.00</div>
+        <div class="price">￥{{ price.toFixed(2) }}</div>
         <!-- 商品数量 -->
-        <div class="count">数量</div>
+        <div class="count">数量:{{ count }}</div>
       </div>
     </div>
   </div>
@@ -27,6 +33,51 @@
 <script>
 export default {
   name: "Esgoods",
+  props: {
+    // id,thumb,title,price,count,checked
+    // 商品id
+    id: {
+      type: [String, Number],
+      required: true,
+    },
+    // 商品图片
+    thumb: {
+      type: String,
+      required: true,
+    },
+    // 商品名称
+    title: {
+      type: String,
+      required: true,
+    },
+    // 商品价格
+    price: {
+      type: Number,
+      required: true,
+    },
+    // 商品数量
+    count: {
+      type: Number,
+      required: true,
+    },
+    // 商品选中状态
+    checked: {
+      type: Boolean,
+      required: true,
+    },
+  },
+  // 复选框状态变化自定义事件
+  emits: ["stateChange"],
+  // 复选框选中状态变化处理函数，通过事件对象e获取最新选中状态
+  methods: {
+    onCheckBoxChange(e) {
+      // 触发自定义事件,向外传递id和复选框的最新选中状态
+      this.$emit("stateChange", {
+        id: this.id,
+        value: e.target.checked,
+      });
+    },
+  },
 };
 </script>
 

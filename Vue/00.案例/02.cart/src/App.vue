@@ -7,13 +7,23 @@
       bgcolor="blue"
       :fsize="18"
     ></es-header>
-    <!-- 调用EsFooter.vue组件 -->
-    <es-goods v-for="item in goodslist" :key="item.id"></es-goods>
+    <!-- 调用EsGoods.vue组件 -->
+    <es-goods
+      v-for="item in goodslist"
+      :key="item.id"
+      :id="item.id"
+      :title="item.goods_name"
+      :thumb="item.goods_img"
+      :price="item.goods_price"
+      :count="item.goods_count"
+      :checked="item.goods_state"
+      @stateChange="onGoodStateChange"
+    ></es-goods>
     <!-- 调用EsFooter.vue组件 -->
     <es-footer
       :isfull="true"
-      :total="11"
-      :amount="11.32123"
+      :total="total"
+      :amount="amount"
       @fullChange="onFullStateChange"
     ></es-footer>
   </div>
@@ -52,7 +62,32 @@ export default {
     // 调用methods中的getGoodsList方法，请求商品列表的数据
     this.getGoodsList();
   },
-  mounted() {},
+  computed: {
+    // 计算属性，返回选中商品的总价格
+    amount() {
+      // 总价格变量
+      let a = 0;
+      this.goodslist
+        .filter((item) => item.goods_state === true)
+        .forEach((item) => {
+          // 循环累加被选中的商品价格
+          a += item.goods_price * item.goods_count;
+        });
+      return a;
+    },
+    // 计算属性，返回被选中商品的总数量
+    total() {
+      // 声明总数量的变量
+      let t = 0;
+      this.goodslist
+        .filter((item) => item.goods_state === true)
+        .forEach((item) => {
+          // 循环累加被选中的商品数量
+          t += item.goods_count;
+        });
+      return t;
+    },
+  },
 
   methods: {
     // 请求商品列表的数据
@@ -67,8 +102,20 @@ export default {
     },
     // 监听全选按钮选中状态的变化
     onFullStateChange(isFull) {
-      // 打印全选按钮选中状态
-      console.log(isFull);
+      // 循环将每个商品的复选框选中状态改成跟全选复选框的选中状态一样
+      this.goodslist.forEach(item =>{
+        item.goods_state = isFull
+      })
+    },
+    // 单个商品选中状态变化触发的函数
+    onGoodStateChange(e) {
+      // 在数组中找到指定id的数组元素
+      const result = this.goodslist.find((item) => item.id === e.id);
+      // 判断是否找到
+      if (result) {
+        // 找到了则更新对应商品的选中状态
+        result.goods_state = e.value;
+      }
     },
   },
 };
