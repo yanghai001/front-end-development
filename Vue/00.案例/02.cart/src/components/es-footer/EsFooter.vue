@@ -7,26 +7,59 @@
         type="checkbox"
         name="fullCheck"
         id="fullCheck"
+        :checked="isfull"
+        @change="onCheckBoxChange"
       />
       <label class="form-check-label" for="fullCheck"> 全选 </label>
     </div>
     <!-- 合计区域 -->
     <div>
       <span>合计：</span>
-      <span class="amount">￥0.00</span>
+      <!-- 将amount的值保留两位小数 -->
+      <span class="amount">￥{{ amount.toFixed(2) }}</span>
     </div>
     <!-- 结算按钮 -->
-    <button type="button" class="btn btn-primary btn-settle">结算(0)</button>
+    <!-- disabled的值为true表示禁用按钮 -->
+    <button
+      type="button"
+      class="btn btn-primary btn-settle"
+      :disabled="total === 0"
+    >
+      结算({{ total }})
+    </button>
   </div>
 </template>
 
 <script>
 export default {
   name: "Esfooter",
-  data() {
-    return {};
+  props: {
+    // 已勾选商品的总价格
+    amount: {
+      type: Number,
+      default: 0,
+    },
+    // 已勾选商品的总数量
+    total: {
+      type: Number,
+      default: 0,
+    },
+    // 全选按钮是否选中
+    isfull: {
+      type: Boolean,
+      default: false,
+    },
   },
-  methods: {},
+  // 声明自定义事件
+  emits: ["fullChange"],
+
+  methods: {
+    // 全选选择框选中状态变化处理函数
+    onCheckBoxChange(e) {
+      // e.target.checked是复选框最新的选中状态,自定义事件将这个值向父组件传递
+      this.$emit("fullChange", e.target.checked);
+    },
+  },
 };
 </script>
 

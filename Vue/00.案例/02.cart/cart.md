@@ -266,7 +266,7 @@ npm i less -D
     <!--footer组件-->
     <es-footer :isfull="false" :total="1" :amount="98" @fullChange="onFullStateChange"></es-footer>
   ```
-##### 4.2.1 渲染组件的基础布局
+##### 4.2.2 渲染组件的基础布局
 1、将EsFooter.vue组件在页面底部进行固定定位：
 ```
     <template>
@@ -341,11 +341,322 @@ npm i less -D
     </style>
 ```
 ##### 4.2.3 封装自定义属性amount
+1、在EsFooter.vue组件的props节点中声明如下的自定义属性：
+```
+    <script>
+    export default {
+    name: "Esfooter",
+    props: {
+        // 已勾选商品的总价格
+        amount: {
+        type: Number,
+        default: 0,
+        },
+    },
+    };
+    </script>
+```
+2、在EsFooter.vue组件的DOM结构中渲染amount的值：
+```
+    <!-- 合计区域 -->
+    <div>
+    <span>合计：</span>
+    <!-- 将amount的值保留两位小数 -->
+    <span class="amount">￥{{ amount.toFixed(2) }}</span>
+    </div>
+```
 ##### 4.2.4 封装自定义属性total
+1、在EsFooter.vue组件的props节点中声明如下的自定义属性：
+```
+    props: {
+        // 已勾选商品的总价格
+        amount: {
+        type: Number,
+        default: 0,
+        },
+        // 已勾选商品的总数量
+        total: {
+        type: Number,
+        default: 0,
+        },
+    },
+```
+2、在EsFooter.vue组件的DOM结构中渲染total的值：
+```
+    <!-- 结算按钮 -->
+    <button type="button" class="btn btn-primary btn-settle">
+      结算({{ total }})
+    </button>
+```
+3、动态控制**结算按钮**的禁用状态：
+```
+    <!-- 结算按钮 -->
+    <!-- disabled的值为true表示禁用按钮 -->
+    <button
+      type="button"
+      class="btn btn-primary btn-settle"
+      :disabled="total === 0"
+    >
+      结算({{ total }})
+    </button>
+```
 ##### 4.2.5 封装自定义属性isfull
+1、在EsFooter.vue组件的props节点中声明如下的自定义属性：
+```
+    props: {
+        // 已勾选商品的总价格
+        amount: {
+        type: Number,
+        default: 0,
+        },
+        // 已勾选商品的总数量
+        total: {
+        type: Number,
+        default: 0,
+        },
+        // 全选按钮是否选中
+        isfull: {
+        type: Boolean,
+        default: false,
+        },
+    },
+```
+2、在EsFooter.vue组件的DOM结构中根据isfull的值渲染全选按钮的选中状态：
+```
+    <!-- 全选按钮 -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="fullCheck" id="fullCheck" :checked="isfull"/>
+      <label class="form-check-label" for="fullCheck"> 全选 </label>
+    </div>
+```
 ##### 4.2.6 封装自定义事件fullChange
-
+1、在EsFooter.vue组件的emits节点中声明fullChange自定义事件：
+```
+    // 声明自定义事件
+    emits: ["fullChange"],
+```
+2、在EsFooter.vue组件的DOM结构中为全选选择框绑定状态变化change的处理函数onCheckBoxChange：
+```
+    <!-- 全选按钮 -->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" name="fullCheck" id="fullCheck" :checked="isfull" @change="onCheckBoxChange"/>
+      <label class="form-check-label" for="fullCheck"> 全选 </label>
+    </div>
+```
+3、在EsFooter.vue组件的methods节点中声明onCheckBoxChange方法，并通过事件对象e获取最新的选中状态，并通过触发自定义事件将全选选中的状态值传递给父组件：
+```
+    methods: {
+        // 全选选择框选中状态变化处理函数
+        onCheckBoxChange(e) {
+        // e.target.checked是复选框最新的选中状态,自定义事件将这个值向父组件传递
+        this.$emit("fullChange", e.target.checked);
+        },
+    },
+```
+4、在app.vue组件中测试EsFooter.vue组件：
+```
+    <!-- 调用EsFooter.vue组件 -->
+    <es-footer :isfull="true" :total="11" :amount="11.32123" @fullChange="onFullStateChange"></es-footer>
+```
+并在methods节点中声明onFullStateChange函数，通过形参获取到EsFooter.vue组件传递出来的**全选按钮**最新的选中状态
+```
+    // 监听全选按钮选中状态的变化
+    onFullStateChange(isFull) {
+      // 打印全选按钮选中状态
+      console.log(isFull);
+    },
+```
 
 ### 五、封装es-goods组件
+#### 5.1 创建并注册es-goods组件
+1、在src/components/es-goods/目录先创建EsGoods.vue组件，并完成以下结构：
+```
+    <template>
+        <div>EsGoods组件</div>
+    </template>
+
+    <script>
+        export default {
+            name: "Esgoods",
+        };
+    </script>
+
+    <style lang="less" scoped></style>
+```
+2、在App.vue组件中导入并注册EsGoods.vue组件：
+```
+    <script>
+    // 导入EsGoods组件
+    import EsGoods from "./components/es-goods/EsGoods.vue";
+
+    export default {
+    name: "Cart",
+    components: {
+        // 注册EsGoods组件
+        EsGoods,
+    },
+    };
+    </script>
+```
+3、在app.vue的template模板结构中使用EsGoods.vue组件：
+```
+    <template>
+    <div class="main-container">Cart</div>
+    <hr />
+    <!-- 调用EsHeader.vue组件 -->
+    <es-header
+        title="购物车"
+        color="white"
+        bgcolor="blue"
+        :fsize="18"
+    ></es-header>
+    <!-- 调用EsFooter.vue组件 -->
+    <es-goods></es-goods>
+    <!-- 调用EsFooter.vue组件 -->
+    <es-footer
+        :isfull="true"
+        :total="11"
+        :amount="11.32123"
+        @fullChange="onFullStateChange"
+    ></es-footer>
+    </template>
+```
+#### 5.2 封装es-goods组件
+##### 5.2.1 封装需求
+1、实现EsGoods组件的基本布局
+2、封装组件的6个自定义属性（id,thumb,title,price,count,checked)
+3、封装自定义事件stateChange，运行外界监听组件选中状态的变化
+4、使用实例：
+```
+
+```
+##### 5.2.2 渲染组件的基础布局
+1、在EsGoods.vue组件中的template节点完善如下DOM结构：
+```
+    <template>
+    <div class="goods-container">
+        <!-- 左侧图片区域 -->
+        <div class="left">
+        <img src="商品图片" class="thumb" />
+        </div>
+        <!-- 右侧信息区域 -->
+        <div class="right">
+        <!-- 商品名称 -->
+        <div class="top">xxx</div>
+        <div class="bottom">
+            <!-- 商品价格 -->
+            <div class="price">￥0.00</div>
+            <!-- 商品数量 -->
+            <div class="count">数量</div>
+        </div>
+        </div>
+    </div>
+    </template>
+```
+2、在EsGoods.vue组件中为组件进行布局样式的美化：
+```
+    <style lang="less" scoped>
+    .goods-container {
+    display: flex;
+    padding: 10px;
+    // 左侧图片的样式
+    .left {
+        margin-right: 10px;
+        // 缩略图的样式
+        .thumb {
+        display: block;
+        width: 100px;
+        height: 100px;
+        background-color: #efefef;
+        }
+    }
+    //   右侧商品信息的样式
+    .right {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        flex: 1;
+        // 顶部标题区域
+        .top {
+        font-weight: 700;
+        }
+        .bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .price {
+            color: red;
+            font-weight: 700;
+        }
+        }
+    }
+    }
+    </style>
+```  
+
+3、在EsGoods.vue组件中在缩略图组件外部再包裹一个复选框（从EsFooter.vue组件中复制）,以便选择图片也能选中商品：  
+
+```
+    <!-- 左侧图片区域 -->
+    <div class="left">
+    <!-- 复选框 -->
+    <div class="form-check">
+        <input class="form-check-input" type="checkbox" id="fullCheck" />
+        <label class="form-check-label" for="fullCheck">
+        <img src="商品图片" class="thumb" />
+        </label>
+    </div>
+    </div>
+```
+4、在EsGoods.vue组件中通过样式调整复选框的上下位置：
+```
+    // 左侧图片的样式
+    .left {
+        margin-right: 10px;
+        // 复选框的样式
+        .form-check-input {
+        margin-top: 2.5em;
+        }
+        // 缩略图的样式
+        .thumb {
+        display: block;
+        width: 100px;
+        height: 100px;
+        background-color: #efefef;
+        }
+    }
+```
+5、在app.vue组件中通过v-for指令循环渲染EsGoods组件：
+```
+    <!-- 调用EsFooter.vue组件 -->
+    <es-goods v-for="item in goodslist" :key="item.id"></es-goods>
+```
+并给app.vue组件添加上下margin样式,以全部显示列表：
+```
+    <style lang="less" scoped>
+    .main-container {
+    margin-top: 45px;
+    margin-bottom: 50px;
+    }
+    </style>
+```
+6、在EsGoods.vue组件中为EsGoods添加顶边框：
+```
+    .goods-container {
+    display: flex;
+    padding: 10px;
+    // 最终生成的选择器为 .goods-container + .goods-container
+    // 在css中（+）是“相邻兄弟选择器”，表示选择紧连着另一个元素后的元素，两者具有相同的父元素
+    + .goods-container {
+        border-top: 1px solid #efefef;
+    }
+    //省略其他样式
+```
+##### 5.2.3 封装自定义属性
+
+
+##### 5.2.4 封装自定义事件stateChange
+
+
 ### 六、实现合计、结算数量、全选功能
 ### 七、封装es-counter组件
