@@ -24,13 +24,18 @@
         <!-- 商品价格 -->
         <div class="price">￥{{ price.toFixed(2) }}</div>
         <!-- 商品数量 -->
-        <div class="count">数量:{{ count }}</div>
+        <div class="count">
+          <es-counter :num="count" @numberChange="onNumberChange"></es-counter>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// 导入EsCounter.vue组件
+import EsCounter from "../es-counter/EsCounter.vue";
+
 export default {
   name: "Esgoods",
   props: {
@@ -77,6 +82,14 @@ export default {
         value: e.target.checked,
       });
     },
+    onNumberChange(number) {
+      // 更新当前组件的count值
+      this.count = number;
+    },
+  },
+  components: {
+    // 注册EsCounter组件
+    EsCounter,
   },
 };
 </script>

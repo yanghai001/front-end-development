@@ -854,3 +854,160 @@ computed: {
 ```
 
 ### 七、封装es-counter组件
+#### 7.1创建并注册es-counter组件
+1、在.在src/components/es-counter目录下创建EsCounter.vue组件，并完成以下结构:
+```
+    <template>
+    <div>EsCounter组件</div>
+    </template>
+
+    <script>
+    export default {
+    name: "Escounter",
+    };
+    </script>
+
+    <style lang="less" scoped></style>
+```
+2、在EsGoods.vue组件中导入并注册EsCounter.vue组件：
+```
+    // 导入EsCounter.vue组件
+    import EsCounter from "../es-counter/EsCounter.vue";
+    components: {
+        // 注册EsCounter组件
+        EsCounter,
+    },
+```
+3、在EsGoods.vue组件的DOM结构中使用EsCounter.vue组件：
+```
+    <!-- 商品数量 -->
+    <div class="count"><es-counter></es-counter></div>
+```
+
+#### 7.2 封装es-counter组件
+##### 7.2.1 封装需求
++ 渲染组件的基本布局
++ 实现数量的加减操作
++ 处理min最小值
++ 使用watch侦听器处理文本输入的结构
++ 封装numChange自定义事件
++ 代码实例：
+  ```
+
+  ```
+##### 7.2.2 基于bootstrap渲染组件布局
+1、在EsCounter.vue组件中基于bootstrap提供的组件渲染组件的基础布局：
+```
+    <template>
+    <div class="counter-container">
+        <!-- 减1按钮 -->
+        <button type="button" class="btn btn-light btn-sm">-</button>
+        <!-- 中间输入框 -->
+        <input type="number" class="form-control form-control-sm ipt-num" />
+        <!-- 加1按钮 -->
+        <button type="button" class="btn btn-light btn-sm">+</button>
+    </div>
+    </template>
+```
+2、在EsCounter.vue组件中美化当前组件的样式：
+```
+    <style lang="less" scoped>
+    .counter-container {
+    display: flex;
+    // 按钮的样式
+    .btn {
+        width: 25px;
+    }
+    //   输入框的样式
+    .ipt-num {
+        width: 34px;
+        text-align: center;
+        margin: 0 4px;
+    }
+    }
+    </style>
+```
+##### 7.2.3 实现数量的渲染
+1、在EsCounter.vue组件中，声明自定义属性如下：
+```
+    props: {
+        //   外部传入数量，只读属性，无法写入，所以无法使用v-model双向绑定
+        num: {
+        type: Number,
+        required: true,
+        },
+    },
+```
+2、因为props属性是只读的，无法使用v-model跟输入框绑定，所以需要在EsCounter.vue组件中的data节点中声明一个支持读写的变量：
+```
+    data(){
+        //   data内的变量可读可写
+        return{
+            number: this.num
+        }
+    },
+```
+3、在EsCounter.vue组件中修改DOM结构，双向绑定数据：
+```
+    <!-- 中间输入框 -->
+    <input
+      type="number"
+      class="form-control form-control-sm ipt-num"
+      v-model="number"
+    />
+```
+4.在EsGoods.vue组件的DOM结构中修改EsCounter组件的使用：
+```
+    <!-- 商品数量 -->
+    <div class="count"><es-counter :num="count"></es-counter></div>
+```
+##### 7.2.4 实现数量的加减功能
+1、在EsCounter.vue组件的props节点中声明自定义事件numberChange:
+```
+  //   声明自定义事件
+  emits: ["numberChange"],
+```
+
+2、在EsCounter.vue组件中修改DOM结构，分别为加1按钮和减1按钮绑定点击事件函数：
+```
+    <!-- 减1按钮 -->
+    <button type="button" class="btn btn-light btn-sm" @click="numSub">-</button>
+    <!-- 加1按钮 -->
+    <button type="button" class="btn btn-light btn-sm" @click="numAdd">+</button>
+```
+3、在EsCounter.vue组件的methods节点中声明加1和减1函数：
+```
+    methods: {
+        //   减1操作
+        numSub() {
+        // 限制最小值为1
+        if (this.number - 1 < 1) return;
+        this.number--;
+        //   触发自定义事件向外传递最新的数量
+        this.$emit("numberChange", this.number);
+        },
+        // 加1操作
+        numAdd() {
+        // 限制最大值为99
+        if (this.number + 1 > 99) return;
+        this.number++;
+        //   触发自定义事件向外传递最新的数量
+        this.$emit("numberChange", this.number);
+        },
+    },
+```
+4、在EsGoods.vue组件的DOM结构中修改EsCounter组件的使用，为numberChange自定义事件绑定处理函数onNumberChange：
+```
+    <!-- 商品数量 -->
+    <div class="count"><es-counter :num="count" @numberChange="onNumberChange"></es-counter></div>
+```
+5、在EsGoods.vue组件中声明onNumberChange处理函数：
+```
+
+```
+
+
+
+
+
+
