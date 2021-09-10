@@ -1003,7 +1003,7 @@ computed: {
 ```
 5、在EsGoods.vue组件中声明onNumberChange处理函数：
 ```
-
+11
 ```
 
 
