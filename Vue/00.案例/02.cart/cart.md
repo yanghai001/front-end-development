@@ -23,8 +23,8 @@ npm i less -D
         }
 ```
 ### 二、封装es-header组件
-#### 2.1创建和注册es-header组件
-1.在src/components目录下创建EsHeader.vue组件，并完成以下结构：
+#### 2.1 创建和注册es-header组件
+1、在src/components目录下创建EsHeader.vue组件，并完成以下结构：
 ```
     <template>
     <div>EsHeader组件</div>
@@ -39,7 +39,7 @@ npm i less -D
     <style lang="less" scoped>
     </style>
 ```
-2.在app.vue组件中完成以下结构，导入并注册EsHeader.vue组件：
+2、在app.vue组件中完成以下结构，导入并注册EsHeader.vue组件：
 ```
     <template>
     <div>Cart</div>
@@ -72,14 +72,14 @@ npm i less -D
     <style lang="less" scoped>
     </style>
 ```
-3.在app.vue的template模板结构中使用EsHeader组件：
+3、在app.vue的template模板结构中使用EsHeader组件：
 ```
     <template>
     <div>Cart</div>
     <es-header></es-header>
     </template>
 ```
-#### 2.2封装es-header组件
+#### 2.2 封装es-header组件
 1、封装需求：
     - 允许用户自定义 **title** 标题内容
     - 允许用户自定义 **color** 文字颜色
@@ -214,7 +214,7 @@ npm i less -D
     },
 ```
 ### 四、封装es-footer组件
-#### 4.1创建并注册es-footer组件
+#### 4.1 创建并注册es-footer组件
 1、在src/components/es-footer/目录先创建EsFooter.vue组件，并完成以下结构：
 ```
     <template>
@@ -791,7 +791,7 @@ npm i less -D
 ```
 
 ### 六、实现合计、结算数量、全选功能
-#### 6.1实现价格合计、结算数量合计功能
+#### 6.1 实现价格合计、结算数量合计功能
 1、在app.vue组件中的computed节点中创建以下计算属性：
 ```
 computed: {
@@ -831,7 +831,7 @@ computed: {
       @fullChange="onFullStateChange"
     ></es-footer>
 ```
-#### 6.2实现全选和取消全选功能
+#### 6.2 实现全选和取消全选功能
 我们在app.vue组件中调用es-footer组件时，已经绑定了监听全选复选框选中状态的函数onFullStateChange：
 ```
     <!-- 调用EsFooter.vue组件 -->
@@ -854,7 +854,7 @@ computed: {
 ```
 
 ### 七、封装es-counter组件
-#### 7.1创建并注册es-counter组件
+#### 7.1 创建并注册es-counter组件
 1、在.在src/components/es-counter目录下创建EsCounter.vue组件，并完成以下结构:
 ```
     <template>
@@ -893,7 +893,7 @@ computed: {
 + 封装numChange自定义事件
 + 代码实例：
   ```
-
+    <es-counter :num="count" @numberChange="onGetNumber"></es-counter>
   ```
 ##### 7.2.2 基于bootstrap渲染组件布局
 1、在EsCounter.vue组件中基于bootstrap提供的组件渲染组件的基础布局：
@@ -962,20 +962,14 @@ computed: {
     <div class="count"><es-counter :num="count"></es-counter></div>
 ```
 ##### 7.2.4 实现数量的加减功能
-1、在EsCounter.vue组件的props节点中声明自定义事件numberChange:
-```
-  //   声明自定义事件
-  emits: ["numberChange"],
-```
-
-2、在EsCounter.vue组件中修改DOM结构，分别为加1按钮和减1按钮绑定点击事件函数：
+1、在EsCounter.vue组件中修改DOM结构，分别为加1按钮和减1按钮绑定点击事件函数：
 ```
     <!-- 减1按钮 -->
     <button type="button" class="btn btn-light btn-sm" @click="numSub">-</button>
     <!-- 加1按钮 -->
     <button type="button" class="btn btn-light btn-sm" @click="numAdd">+</button>
 ```
-3、在EsCounter.vue组件的methods节点中声明加1和减1函数：
+2、在EsCounter.vue组件的methods节点中声明加1和减1函数：
 ```
     methods: {
         //   减1操作
@@ -983,28 +977,136 @@ computed: {
         // 限制最小值为1
         if (this.number - 1 < 1) return;
         this.number--;
-        //   触发自定义事件向外传递最新的数量
-        this.$emit("numberChange", this.number);
         },
         // 加1操作
         numAdd() {
         // 限制最大值为99
         if (this.number + 1 > 99) return;
         this.number++;
-        //   触发自定义事件向外传递最新的数量
-        this.$emit("numberChange", this.number);
         },
     },
 ```
-4、在EsGoods.vue组件的DOM结构中修改EsCounter组件的使用，为numberChange自定义事件绑定处理函数onNumberChange：
+##### 7.2.5 处理输入框输入的数据
+1、为输入框的v-model指令增加.lazy修饰符（只有在输出框触发change事件时才更新v-model所绑定的数据源）：
 ```
-    <!-- 商品数量 -->
-    <div class="count"><es-counter :num="count" @numberChange="onNumberChange"></es-counter></div>
+    <!-- 中间输入框 -->
+    <input
+      type="number"
+      class="form-control form-control-sm ipt-num"
+      v-model.lazy="number"
+    />
 ```
-5、在EsGoods.vue组件中声明onNumberChange处理函数：
+2、通过watch侦听器监听number的数据变化，并按照分析的步骤实现代码：
 ```
-11
+    watch: {
+        // 监听number的数据变化
+        number(newVal) {
+        // 将输入的值转换成整数
+        const parseResult = parseInt(newVal);
+        // 如果转换的结果不是数字或者＜1，则强制number的值等于1
+        if (isNaN(parseResult) || parseResult < 1) {
+            this.number = 1;
+            return;
+        }
+        // 如果转换结果>99，强制为99
+        if (parseResult > 99) {
+            this.number = 99;
+            return;
+        }
+        if (String(parseResult).indexOf(".") !== -1) {
+            // 其他情况把转换结果赋给number
+            this.number = parseResult;
+            return;
+        }
+        console.log(this.number);
+        },
+    },
+
 ```
+##### 7.2.6 把EsCounter最新的数量传递给使用者EsGoods
+1、在EsCounter组件中声明自定义事件numChange:
+```
+  // 声明自定义事件
+  emits:['numChange'],
+```
+2、在EsCounter组件中的watch侦听器中监视到数据发生变化就触发自定义事件传递数据：
+```
+    watch: {
+        // 监听number的数据变化
+        number(newVal) {
+        // 将输入的值转换成整数
+        const parseResult = parseInt(newVal);
+        // 如果转换的结果不是数字或者＜1，则强制number的值等于1
+        if (isNaN(parseResult) || parseResult < 1) {
+            this.number = 1;
+            return;
+        }
+        // 如果转换结果>99，强制为99
+        if (parseResult > 99) {
+            this.number = 99;
+            return;
+        }
+        if (String(parseResult).indexOf(".") !== -1) {
+            // 其他情况把转换结果赋给number
+            this.number = parseResult;
+            return;
+        }
+        // 数据发生变化的时候触发自定义事件，并把数据传递出去
+        this.$emit('numChange',this.number);
+        },
+    },
+```
+3、在EsGoods.vue组件中监听自定义事件,绑定处理事件：
+```
+<es-counter :num="count" @numChange="getNumber"></es-counter>
+```
+4、在EsGoods.vue组件中声明getNumber函数：
+```
+    getNumber(number) {
+      // 得到最新的num，打印出来看一看
+      console.log(number);
+    },
+```
+##### 7.2.7 把EsGoods得到的最新的数量传递给使用者APP根组件更新商品数据列表
+1、在EsGoods.vue组件中声明自定义事件countChange:
+```
+    emits: ["stateChange",'countChange'],
+```
+2、在EsGoods.vue组件中的getNumber事件触发自定义事件，将商品id和最新数量传递出去：
+```
+    getNumber(number) {
+      // 更新当前组件的count值
+      this.$emit('countChange', {id:this.id,count:number});
+    },
+```
+3、在App根组件的DOM结构中监听自定义事件，并绑定处理函数：
+```
+    <!-- 调用EsGoods.vue组件 -->
+    <es-goods
+      v-for="item in goodslist"
+      :key="item.id"
+      :id="item.id"
+      :title="item.goods_name"
+      :thumb="item.goods_img"
+      :price="item.goods_price"
+      :count="item.goods_count"
+      :checked="item.goods_state"
+      @stateChange="onGoodStateChange"
+      @countChange="onGoodsCountChange"
+    ></es-goods>
+```
+4、声明onCountChange处理函数，更新对应id的商品的数量：
+```
+    // 某个商品的数量发生变化时更新数据
+    onGoodsCountChange(e){
+      const result = this.goodslist.find(item=>item.id === e.id)
+      if(result){
+        result.goods_count =e.count
+      }
+    }
+```
+
+
 
 
 

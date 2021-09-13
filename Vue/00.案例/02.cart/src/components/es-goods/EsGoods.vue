@@ -25,7 +25,7 @@
         <div class="price">￥{{ price.toFixed(2) }}</div>
         <!-- 商品数量 -->
         <div class="count">
-          <es-counter :num="count" @numberChange="onNumberChange"></es-counter>
+          <es-counter :num="count" @numChange="getNumber"></es-counter>
         </div>
       </div>
     </div>
@@ -72,7 +72,7 @@ export default {
     },
   },
   // 复选框状态变化自定义事件
-  emits: ["stateChange"],
+  emits: ["stateChange", "countChange"],
   // 复选框选中状态变化处理函数，通过事件对象e获取最新选中状态
   methods: {
     onCheckBoxChange(e) {
@@ -82,9 +82,14 @@ export default {
         value: e.target.checked,
       });
     },
-    onNumberChange(number) {
+    getNumber(number) {
       // 更新当前组件的count值
-      this.count = number;
+      this.$emit("countChange", {
+        // 商品id
+        id: this.id,
+        // 商品最新的数量
+        count: number,
+      });
     },
   },
   components: {

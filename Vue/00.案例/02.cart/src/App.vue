@@ -18,6 +18,7 @@
       :count="item.goods_count"
       :checked="item.goods_state"
       @stateChange="onGoodStateChange"
+      @countChange="onGoodsCountChange"
     ></es-goods>
     <!-- 调用EsFooter.vue组件 -->
     <es-footer
@@ -117,6 +118,13 @@ export default {
         result.goods_state = e.value;
       }
     },
+    // 某个商品的数量发生变化时更新数据
+    onGoodsCountChange(e){
+      const result = this.goodslist.find(item=>item.id === e.id)
+      if(result){
+        result.goods_count =e.count
+      }
+    }
   },
 };
 </script>
